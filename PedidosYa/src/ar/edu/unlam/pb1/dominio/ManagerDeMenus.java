@@ -7,6 +7,7 @@ import ar.edu.unlam.pb1.dominio.enums.*;
 public class ManagerDeMenus {
 	
 	static Scanner teclado = new Scanner(System.in);
+	static Carrito carrito = new Carrito(100);
 	
 	public static void manejarMenuPrincipal() {
 		MenuPrincipal opcion;
@@ -25,6 +26,10 @@ public class ManagerDeMenus {
 				break;
 			case VERDULERIA:
 				manejarMenuTiposDeVerdulerias();
+				break;
+			case CARRITO:
+				System.out.println("El saldo acumulado es de: " + carrito.getSaldo());
+				carrito.verCarrito();
 				break;
 			case SALIR:
 				System.out.println("nos vemos");
@@ -120,18 +125,18 @@ public class ManagerDeMenus {
 			opcionMenuComidas = ingresarOpcionMenuComidas();
 			switch(opcionMenuComidas) {
 			case COMIDAS_LISTAS:
+				manejarComidasListas();
+				break;
 			case GALLETITAS_Y_PANADERIAS:
 			case LACTEOS_Y_QUESOS:
 			case PASTAS:
 			case SNACKS:
-				System.out.println("Tipos de comidas");
-				break;
 			case VOLVER:
 				return;
 			}
 		}while(!opcionMenuComidas.equals(MenuComidas.VOLVER));
 	}
-	
+
 	private static void mostarMenuComidas() {
 		System.out.println("\nIngrese una opcion...");
 		for(int i = 0; i < MenuComidas.values().length ; i++) {
@@ -405,4 +410,35 @@ public class ManagerDeMenus {
 	private static MenuVerduleria ingresarOpcionDelMenuVerduleria() {
 		return MenuVerduleria.values()[teclado.nextInt() - 1];
 	}
+	
+	private static void manejarComidasListas() {
+		Producto[] listaDeProductosDisponibles = new Producto[2];
+		Producto burrito = new Producto("Burritos Integrales", 4825);
+		Producto tarta = new Producto("Tarta De Zapallito", 5070);
+		listaDeProductosDisponibles[0] = burrito;
+		listaDeProductosDisponibles[1] = tarta;
+		agregarProductosAlCarrito(listaDeProductosDisponibles);
+	}
+	
+	public static void agregarProductosAlCarrito(Producto[] listaDeProductosDisponibles) {
+		int opcion;
+		int cantidad;
+		do {
+			for (int i = 0; i < listaDeProductosDisponibles.length; i++) {
+				System.out.println((i+1) + ". " + listaDeProductosDisponibles[i].toString());
+			}
+			System.out.println("\nIngrese el numero del indice para añadir el producto al carrito o 0 para volver");
+			opcion = teclado.nextInt();
+			if(opcion == 1) {
+				System.out.println("Ingrese la cantidad");
+				cantidad = teclado.nextInt();
+				carrito.agregarAlCarrito(listaDeProductosDisponibles[0], cantidad);
+			}else if(opcion == 2) {
+				System.out.println("Ingrese la cantidad");
+				cantidad = teclado.nextInt();
+				carrito.agregarAlCarrito(listaDeProductosDisponibles[1], cantidad);
+			}
+		}while(opcion != 0);
+	}
+	
 }
